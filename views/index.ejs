@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>YourAnimeList</title>
+    <link
+      rel="stylesheet"
+      href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
+      integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u"
+      crossorigin="anonymous"
+    />
+    <link rel="stylesheet" href="/assets/css/style.css" />
+
+    <style></style>
+  </head>
+  
+  <header>
+  <h1>
+    Your<strong>Anime</strong>List
+  </h1>
+  </header>
+
+  <body>
+
+  <div class="content-wrap">
+    <div class="main">
+      <div class="form-group">
+        <h1>Search for Anime</h1>
+        <form class="addAnime" action="/getAnime" method="get">
+          <input
+            type="text"
+            class="search-bar"
+            name="title"
+            placeholder="Insert the Anime name:"
+            minlength="3"
+            required
+          />
+          <div class="col text-center">
+            <input type="submit" class="search-btn" value="Search" />
+          </div>
+        </form>
+      </div>
+
+      <div class="anime-list">
+        <h1 style="text-align: center; width: 100%;">List of Animes</h1>
+        <% searchResult.forEach(function(dat) { %>
+        <article class="anime-card">
+          <figure>
+            <img src="<%= dat.image_url%>" width="360" height="260" />
+          </figure>
+          <h3><%= dat.title %></h3>
+
+          <form class="addAnime" action="/addAnime" method="get">
+            <input type="text" name="title" value="<%= dat.mal_id %>" hidden />
+            <input type="submit" value="Add to favourites" />
+          </form>
+        </article>
+        <% }); %>
+      </div>
+
+      <br /><br />
+      <div class="form-group">
+        <h1 style="text-align: center; margin-bottom: 30px;">Rate an Anime</h1>
+
+        <form class="editAnime" action="/editAnime" method="get">
+          <select
+            name="title"
+            required
+            style="
+              width: 50%;
+              text-align: center;
+              height: 40px;
+              border-radius: 15px;
+            "
+          >
+            <option value="" hidden>Anime Name</option>
+            <%AnimeList.forEach(anime => {%>
+            <option value="<%= anime._id %>"><%= anime.title %></option>
+            <%})%>
+          </select>
+          <label for="data" style="margin-left:50px">Rating:</label>
+          <input
+            type="number"
+            name="data"
+            step=".01"
+            min="0"
+            max="10"
+            placeholder="0-10"
+            style="width: 300px;"
+            required
+          />
+          <input type="submit" value="Update" style="width: 10%; margin-left: 20px;" />
+        </form>
+      </div>
+      <br /><br />    
+      <h1 style="text-align: center">Favourite Animes</h1>
+      <table>
+        <thead>
+          <tr>
+            <th class="darktitle" scope="col">Anime Image</th>
+            <th class="darktitle" scope="col">Title</th>
+            <th class="darktitle" scope="col">Synopsis</th>
+            <th class="darktitle" scope="col">No of Episodes</th>
+            <th class="darktitle" scope="col">No of Fans</th>
+            <th class="darktitle" scope="col">MAL Score</th>
+            <th class="darktitle" scope="col">Ranking</th>
+            <th class="darktitle" scope="col">Delete</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          <%AnimeList.forEach(anime => {%>
+          <tr>
+            <td>
+              <a href="<%= anime.url %>">
+                <img src="<%= anime.image_url %>" width="300" height="293" />
+              </a>
+            </td>
+            <td><%= anime.title %></td>
+            <td><%= anime.synopsis %></td>
+            <td><%= anime.episodes %></td>
+            <td><%= anime.members %></td>
+            <td><%= anime.score %>/10</td>
+            <td><%= anime.rank %></td>
+            <td><a href="/deleteAnime?title=<%= anime._id %>">Delete</a></td>
+          </tr>
+          <%})%>
+        </tbody>
+      </table>
+      <br /><br />
+    </div>
+  </div>
+</body>
+</html>
